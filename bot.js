@@ -105,7 +105,7 @@ var args = message.content.split(/[ ]+/);
   		}
 	}
 
-  if(commander("return", message)) {
+  if(commander("mock", message)) {
         message.channel.fetchMessages({limit: 2}).then(messages => {
           const fetched = messages.last();
           if(message.author.bot) return;
