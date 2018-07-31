@@ -58,7 +58,7 @@ var args = message.content.split(/[ ]+/);
 	  }
   }
 	if(commander("vote", message)) {
-        message.channel.fetchMessage(message.channel.lastMessageID).then(msg => msg.reply(message.content))
+        message.channel.fetchMessage(message.channel.lastMessageID).then(msg => msg.reply('👍'))
         message.channel.fetchMessage(message.channel.lastMessageID).then(msg => msg.react('👎'))
         }
 	if(commander("addrole", message)) {
