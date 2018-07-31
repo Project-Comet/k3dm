@@ -7,7 +7,7 @@ client.on('ready', () => {
     client.user.setPresence({
         game: {
             name: 'samp.k3dm.net',
-            type: 1
+            type: 0
         }
     });
 });
@@ -28,16 +28,24 @@ function hasRole(mem, role) {
 		return false;
 	}
 }
- 
+
+const mock = function(string) {
+    var chars = string.toUpperCase().split('');
+    for (let i = 0; i < chars.length; i += 2) {
+        chars[i] = chars[i].toLowerCase();
+    }
+    return chars.join('');
+};
+
 
  client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 }); 
 
 
-
 client.on('message', async message => {
 var args = message.content.split(/[ ]+/);
+
   if(commander("say", message)) {
 	  if(message.member.hasPermission("ADMINISTRATOR") || hasRole(message.member, "Mod")) {
 		  if(args.length === 1) {
@@ -50,16 +58,17 @@ var args = message.content.split(/[ ]+/);
 	  }
   }
 	if(commander("vote", message)) {
-        message.channel.fetchMessage(message.channel.lastMessageID).then(msg => msg.react('👍'))
+        message.channel.fetchMessage(message.channel.lastMessageID).then(msg => msg.reply(message.content))
         message.channel.fetchMessage(message.channel.lastMessageID).then(msg => msg.react('👎'))
         }
 	if(commander("addrole", message)) {
   		if(message.member.hasPermission("MANAGE_ROLES_OR_PERMISSIONS")) {
   		let member = message.mentions.members.first();
-  		let role = args[2].toLowerCase();
-  		if(!role) return message.reply("Specify a role!");
-		let gRole = message.guild.roles.find("name", role);
-		if(!gRole) return message.reply("Couldn't find that role. ");
+  		let role = args[2];
+      if(!role) return message.reply("Specify a role!");
+		  let gRole = message.guild.roles.find("name", role.toLowerCase());
+      if(!gRole) return message.reply("Couldn't find that role. ");
+
 	
   		member.addRole(gRole).catch(console.error);
   		if(member.roles.has(gRole.id)) return message.reply("They already have that role.");
@@ -78,23 +87,35 @@ var args = message.content.split(/[ ]+/);
 	if(commander("removerole", message) || commander("rmrole", message)) {
   		if(message.member.hasPermission("MANAGE_ROLES_OR_PERMISSIONS")) {
   		let member = message.mentions.members.first();
-  		let role = args[2].toLowerCase();
+  		let role = args[2];
   		if(!role) return message.reply("Specify a role!");
-		let gRole = message.guild.roles.find("name", role);
-		if(!gRole) return message.reply("Couldn't find that role. ");
+		  let gRole = message.guild.roles.find("name", role.toLowerCase());
+		  if(!gRole) return message.reply("Couldn't find that role. ");
 	
   		member.removeRole(gRole).catch(console.error);
   		if(member.roles.has(gRole.id)) return message.reply("They already have that role.");
   			await(member.addRole(gRole.id));
 	   	
-		try{
-    		await member.send(`Congrats, you have been given the role ${gRole.name}`)
-  		}catch(e){
+		  try{
+    		  await member.send(`Congrats, you have been given the role ${gRole.name}`)
+  		  }catch(e){
     		message.channel.send(`Congrats to <@${member.id}>, they have been given the role ${gRole.name}.`)
   			
   			}
   		}
 	}
+
+  if(commander("return", message)) {
+        message.channel.fetchMessages({limit: 2}).then(messages => {
+          const fetched = messages.last();
+          if(message.author.bot) return;
+          message.channel.send(mock(fetched.content), {
+            file: "https://cdn.discordapp.com/attachments/458751527407058954/473641693883924481/mock.png"
+          });
+        })
+     }
+
+
 });
 
 client.on('message', message => {
