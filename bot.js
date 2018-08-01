@@ -280,10 +280,10 @@ if(commander("memberinfo", message)) {
   if(!hasRole(message.member, "Member"))
     return message.reply("Not authorized! Become a Member!"); {
 
-      let memberInfo = message.mentions.members.first();
+      		let memberInfo = message.mentions.members.first();
 
-     if(!memberInfo){
-            var userinf = new Discord.RichEmbed()
+     		if(!memberInfo){
+           		 const userinf = new Discord.RichEmbed()
                 .setAuthor(`❯ Name: ${message.author.username}`)
                 .setThumbnail(message.author.avatarURL)
                 .setDescription("Member's information")
@@ -296,7 +296,7 @@ if(commander("memberinfo", message)) {
 
           }else{
 
-            var userinfoo = new Discord.RichEmbed()
+            	const userinfoo = new Discord.RichEmbed()
                 .setAuthor(`❯ Name: ${memberInfo.displayName}`)
                 .setThumbnail(memberInfo.user.avatarURL)
                 .setDescription("Member's information")
