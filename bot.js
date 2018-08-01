@@ -292,7 +292,7 @@ if(commander("memberinfo", message)) {
                 .addField("❯ ID:", message.author.id)
                 .addField("❯ Created At:", message.author.createdAt)
 
-                message.channel.send(userinf);
+                message.channel.send({userinf});
 
           }else{
 
@@ -305,7 +305,7 @@ if(commander("memberinfo", message)) {
                 .addField("❯ ID:", memberInfo.id)
                 .addField("❯ Created At:", memberInfo.user.createdAt)
 
-                message.channel.send(userinfoo);
+                message.channel.send({userinfoo});
           }
 }
 }
