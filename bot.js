@@ -302,9 +302,9 @@ if(commander("memberinfo", message)) {
                 .setThumbnail(memberInfo.user.avatarURL)
                 .setDescription("Member's information")
                 //.setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-                .addField('❯ Full Username:', `${memberInfo.user.username}#${memberInfo.user.discriminator}`)
-                .addField('❯ ID:', memberInfo.id)
-                .addField('❯ Created At:', memberInfo.user.createdAt)
+                .addField('❯ Full Username:', `${memberInfo.user.username}#${memberInfo.user.discriminator}`, true)
+                .addField('❯ ID:', memberInfo.id, true)
+                .addField('❯ Created At:', memberInfo.user.createdAt, true)
 
                 message.channel.send({userinfoo});
           }
