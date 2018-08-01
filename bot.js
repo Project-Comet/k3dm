@@ -256,7 +256,7 @@ if(commander("serverinfo", message)) {
     if(!message.guild.members.has(message.guild.ownerID)) await message.guild.members.fetch(message.guild.ownerID);
       const embed = new Discord.RichEmbed()
       .setAuthor(`${message.guild.name} - Server Information`, message.guild.iconURL)
-      .setColor(0x00AE86)
+      .setColor(0xD353EF)
       // Displays the guild icon on the right side, commented it out cause I don't like it.
       //.setThumbnail(message.guild.iconURL)
       .addField('❯ Name', message.guild.name, true)
@@ -286,7 +286,8 @@ if(commander("memberinfo", message)) {
                 .setAuthor(`❯ Name: ${message.author.username}`)
                 .setThumbnail(message.author.avatarURL)
                 .setDescription("Member's information")
-                .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+                //.setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+                .setColor(0xD353EF)
                 .addField("❯ Full Username:", `${message.author.username}#${message.author.discriminator}`)
                 .addField("❯ ID:", message.author.id)
                 .addField("❯ Created At:", message.author.createdAt)
@@ -299,7 +300,8 @@ if(commander("memberinfo", message)) {
                 .setAuthor(`❯ Name: ${memberInfo.displayName}`)
                 .setThumbnail(memberInfo.user.avatarURL)
                 .setDescription("Member's information")
-                .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+                //.setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+                .setColor(0xD353EF)
                 .addField("❯ Full Username:", `${memberInfo.user.username}#${memberInfo.user.discriminator}`)
                 .addField("❯ ID:", memberInfo.id)
                 .addField("❯ Created At:", memberInfo.user.createdAt)
