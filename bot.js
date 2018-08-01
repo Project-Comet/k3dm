@@ -283,31 +283,31 @@ if(commander("memberinfo", message)) {
 
       		let memberInfo = message.mentions.members.first();
 
-     		/*if(!memberInfo){
+     		if(!memberInfo){
            		 const userinf = new Discord.RichEmbed()
-                .setAuthor(`❯ Name: ${message.author.username}`)
+                .setAuthor('❯ Name:', message.author.username)
                 .setThumbnail(message.author.avatarURL)
-                .setDescription("Member's information")
+                .setDescription('Member information')
                 //.setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-                .addField("❯ Full Username:", `${message.author.username}#${message.author.discriminator}`)
-                .addField("❯ ID:", message.author.id)
-                .addField("❯ Created At:", message.author.createdAt)
+                .addField('❯ Full Username:', `${message.author.username}#${message.author.discriminator}`, true)
+                .addField('❯ ID:', message.author.id, true)
+                .addField('❯ Created At:', message.author.createdAt, true)
 
-                message.channel.send({userinf}); */
+                message.channel.send({userinf});
 
-        //  }else{
+          }else{
 
             	const userinfoo = new Discord.RichEmbed()
-                .setAuthor(`❯ Name: ${memberInfo.user.username}`)
+                .setAuthor('❯ Name:', memberInfo.displayName)
                 .setThumbnail(memberInfo.user.avatarURL)
                 .setDescription("Member's information")
                 //.setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-                .addField("❯ Full Username:", `${memberInfo.user.username}#${memberInfo.user.discriminator}`)
-                .addField("❯ ID:", memberInfo.id)
-                .addField("❯ Created At:", memberInfo.user.createdAt)
+                .addField('❯ Full Username:', `${memberInfo.user.username}#${memberInfo.user.discriminator}`)
+                .addField('❯ ID:', memberInfo.id)
+                .addField('❯ Created At:', memberInfo.user.createdAt)
 
                 message.channel.send({userinfoo});
-         //}
+          }
 }
 }
 
