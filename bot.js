@@ -1,5 +1,7 @@
 const Discord = require("discord.js");
+
 const client = new Discord.Client();
+const token = 'NDcxNzM3Njg4MjAzMTk4NDY0.DkNG9Q.qMe36h3HTze8_bF3SGnPflafETk';
 const filterLevels = ['Off', 'No Role', 'Everyone'];
 const verificationLevels = ['None', 'Low', 'Medium', '(╯°□°）╯︵ ┻━┻', '┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻'];
 const config = require("./config.json");
@@ -249,6 +251,7 @@ var args = message.content.split(/[ ]+/);
 }
 
 if(commander("serverinfo", message)) {
+	console.log(message);
   if(!message.member.roles.some(r=>["Manager", "Lead Admin", "Admin", "Moderator", "Member"].includes(r.name)) )
       return message.reply("Sorry, you don't have permissions to use this!");  {
 
@@ -350,4 +353,5 @@ client.on('message', message => {
 });
 
 
-client.login(process.env.BOT_TOKEN);
+// client.login(process.env.BOT_TOKEN);
+client.login(token);
