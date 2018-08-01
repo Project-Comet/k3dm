@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 
 const client = new Discord.Client();
-const token = 'NDcxNzM3Njg4MjAzMTk4NDY0.DkNG9Q.qMe36h3HTze8_bF3SGnPflafETk';
 const filterLevels = ['Off', 'No Role', 'Everyone'];
 const verificationLevels = ['None', 'Low', 'Medium', '(╯°□°）╯︵ ┻━┻', '┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻'];
 const config = require("./config.json");
@@ -353,5 +352,4 @@ client.on('message', message => {
 });
 
 
-// client.login(process.env.BOT_TOKEN);
-client.login(token);
+client.login(process.env.BOT_TOKEN);
