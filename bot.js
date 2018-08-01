@@ -283,7 +283,7 @@ if(commander("memberinfo", message)) {
 
       		let memberInfo = message.mentions.members.first();
 
-     		if(!memberInfo){
+     		/*if(!memberInfo){
            		 const userinf = new Discord.RichEmbed()
                 .setAuthor(`❯ Name: ${message.author.username}`)
                 .setThumbnail(message.author.avatarURL)
@@ -293,9 +293,9 @@ if(commander("memberinfo", message)) {
                 .addField("❯ ID:", message.author.id)
                 .addField("❯ Created At:", message.author.createdAt)
 
-                message.channel.send({userinf});
+                message.channel.send({userinf}); */
 
-          }else{
+        //  }else{
 
             	const userinfoo = new Discord.RichEmbed()
                 .setAuthor(`❯ Name: ${memberInfo.displayName}`)
@@ -307,7 +307,7 @@ if(commander("memberinfo", message)) {
                 .addField("❯ Created At:", memberInfo.user.createdAt)
 
                 message.channel.send({userinfoo});
-          }
+         //}
 }
 }
 
