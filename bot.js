@@ -298,7 +298,7 @@ if(commander("memberinfo", message)) {
         //  }else{
 
             	const userinfoo = new Discord.RichEmbed()
-                .setAuthor(`❯ Name: ${memberInfo.displayName}`)
+                .setAuthor(`❯ Name: ${memberInfo.user.username}`)
                 .setThumbnail(memberInfo.user.avatarURL)
                 .setDescription("Member's information")
                 //.setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
