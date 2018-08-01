@@ -277,7 +277,8 @@ if(commander("serverinfo", message)) {
 }
 
 if(commander("memberinfo", message)) {
-		if(!message.member.roles.some(r=>["Manager", "Lead Admin", "Admin", "Moderator", "Member"].includes(r.name)) )
+		console.log(message);
+	if(!message.member.roles.some(r=>["Manager", "Lead Admin", "Admin", "Moderator", "Member"].includes(r.name)) )
       	return message.reply("Sorry, you don't have permissions to use this!");  {
 
       		let memberInfo = message.mentions.members.first();
