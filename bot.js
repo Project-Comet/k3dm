@@ -249,8 +249,8 @@ var args = message.content.split(/[ ]+/);
 }
 
 if(commander("serverinfo", message)) {
-  if(!hasRole(message.member, "Member"))
-    return message.reply("Not authorized! Become a Member!"); {
+  if(!message.member.roles.some(r=>["Manager", "Lead Admin", "Admin", "Moderator", "Member"].includes(r.name)) )
+      return message.reply("Sorry, you don't have permissions to use this!");  {
 
     if(!message.guild.members.has(message.guild.ownerID)) await message.guild.members.fetch(message.guild.ownerID);
       const embed = new Discord.RichEmbed()
