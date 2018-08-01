@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-
 const client = new Discord.Client();
 const filterLevels = ['Off', 'No Role', 'Everyone'];
 const verificationLevels = ['None', 'Low', 'Medium', '(╯°□°）╯︵ ┻━┻', '┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻'];
@@ -277,36 +276,35 @@ if(commander("serverinfo", message)) {
 }
 
 if(commander("memberinfo", message)) {
-		console.log(message);
-	if(!message.member.roles.some(r=>["Manager", "Lead Admin", "Admin", "Moderator", "Member"].includes(r.name)) )
-      	return message.reply("Sorry, you don't have permissions to use this!");  {
+ if(!message.member.roles.some(r=>["Manager", "Lead Admin", "Admin", "Moderator", "Member"].includes(r.name)) )
+        return message.reply("Sorry, you don't have permissions to use this!");  {
 
-      		let memberInfo = message.mentions.members.first();
+      let memberInfo = message.mentions.members.first();
 
-     		if(!memberInfo){
-           		 const userinf = new Discord.RichEmbed()
-                .setAuthor('❯ Name:', message.author.username)
+     if(!memberInfo){
+            const userinf = new Discord.RichEmbed()
+                .setAuthor(`❯ Name: ${message.author.username}`)
                 .setThumbnail(message.author.avatarURL)
-                .setDescription('Member information')
-                //.setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-                .addField('❯ Full Username:', `${message.author.username}#${message.author.discriminator}`, true)
-                .addField('❯ ID:', message.author.id, true)
-                .addField('❯ Created At:', message.author.createdAt, true)
+                .setDescription("Member's information")
+                .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+                .addField("❯ Full Username:", `${message.author.username}#${message.author.discriminator}`)
+                .addField("❯ ID:", message.author.id)
+                .addField("❯ Created At:", message.author.createdAt)
 
-                message.channel.send({userinf});
+                message.channel.send(userinf);
 
           }else{
 
-            	const userinfoo = new Discord.RichEmbed()
-                .setAuthor('❯ Name:', memberInfo.displayName)
+            const userinfoo = new Discord.RichEmbed()
+                .setAuthor(`❯ Name: ${memberInfo.displayName}`)
                 .setThumbnail(memberInfo.user.avatarURL)
                 .setDescription("Member's information")
-                //.setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
-                .addField('❯ Full Username:', `${memberInfo.user.username}#${memberInfo.user.discriminator}`, true)
-                .addField('❯ ID:', memberInfo.id, true)
-                .addField('❯ Created At:', memberInfo.user.createdAt, true)
+                .setColor(EmbedColors[Math.floor(Math.random() * EmbedColors.length)])
+                .addField("❯ Full Username:", `${memberInfo.user.username}#${memberInfo.user.discriminator}`)
+                .addField("❯ ID:", memberInfo.id)
+                .addField("❯ Created At:", memberInfo.user.createdAt)
 
-                message.channel.send({userinfoo});
+                message.channel.send(userinfoo);
           }
 }
 }
@@ -354,3 +352,4 @@ client.on('message', message => {
 
 
 client.login(process.env.BOT_TOKEN);
+// client.login(token);
