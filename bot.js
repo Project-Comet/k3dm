@@ -139,7 +139,7 @@ var args = message.content.split(/[ ]+/);
   		let member = message.mentions.members.first();
   		let role = args[2];
       if(!role) return message.reply("Specify a role!");
-		  let gRole = message.guild.roles.find("name", role.toLowerCase());
+		  let gRole = message.guild.roles.find("name", role);
       if(!gRole) return message.reply("Couldn't find that role. ");
 
 	
@@ -162,7 +162,7 @@ var args = message.content.split(/[ ]+/);
   		let member = message.mentions.members.first();
   		let role = args[2];
   		if(!role) return message.reply("Specify a role!");
-		  let gRole = message.guild.roles.find("name", role.toLowerCase());
+		  let gRole = message.guild.roles.find("name", role);
 		  if(!gRole) return message.reply("Couldn't find that role. ");
 	
   		member.removeRole(gRole).catch(console.error);
