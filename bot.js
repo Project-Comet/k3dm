@@ -225,7 +225,7 @@ client.on('messageDelete', async (message) => {
 // This will react the author's message with all (or as many as possible) guild emojis
 
 
-async function statistics () {
+exports.statistics = function () {
 	const memoryUsage = process.memoryUsage()
   let totalSeconds = (client.uptime / 1000);
   let hours = Math.floor(totalSeconds / 3600);
