@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
+const token = "NDczMTAzMjc4MTAwNzA5Mzc2.Dj9DyA.-LOrP395ZWg9GXyUboDbAlrsA6Y";
 // const autoresponder = require("./modules/autoResponder.js");
 const config = require("./config.json");
 const fs = require("fs");
@@ -241,5 +242,5 @@ async function statistics () {
 	console.log(`current.uptime ${hours}h, ${minutes}m & ${seconds.toFixed()}s`)
 }
 
-// client.login(token);
-client.login(process.env.BOT_TOKEN);
+client.login(token);
+// client.login(process.env.BOT_TOKEN);
