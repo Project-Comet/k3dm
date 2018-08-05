@@ -3,7 +3,6 @@ const client = new Discord.Client();
 // const autoresponder = require("./modules/autoResponder.js");
 const config = require("./config.json");
 const fs = require("fs");
-const chalk = require('chalk');
 const moment = require('moment');
 require('./utils/eventLoader')(client);
 
