@@ -69,7 +69,11 @@ const autoResponder = {
   "oof": {
             file: "https://cdn.discordapp.com/attachments/473899818847305738/473899836333359134/oof.png"
           },
-  "devin": "daddy?"
+  "devin": "daddy?",
+        {
+  "spock":
+    file: "https://cdn.discordapp.com/attachments/275732552797519873/475936918027239425/Z.png"
+  }
 };
 
 
