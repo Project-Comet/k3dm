@@ -6,13 +6,34 @@ const fs = require("fs");
 const moment = require('moment');
 require('./utils/eventLoader')(client);
 
+// ===================================================================
+// ===================================================================
+const Enmap = require('enmap');
+const Provider = require('enmap-sqlite');
+
+client.settings = new Enmap({provider: new Provider({name: "settings", persistent: true})});
 
 
+const defaultSettings = {
+  prefix: `${config.prefix}`,
+  admin_role: "Administrator",
+  mod_role: "Moderator",
+  logs_channel: "logs",
+  welcome_channel: "welcome",
+  welcome_message: "Say hello to {{user}}, everyone!"
+}
+
+exports.defaultSettings = defaultSettings;
+
+
+
+// ===================================================================
+// ===================================================================
 client.elevation = message => {
   let permlvl = 0;
-  const mod_role = message.guild.roles.find('name', config.modrolename);
+  const mod_role = message.guild.roles.find('name', defaultSettings.mod_role);
   if (mod_role && message.member.roles.has(mod_role.id)) permlvl = 2;
-  const admin_role = message.guild.roles.find('name', config.adminrolename);
+  const admin_role = message.guild.roles.find('name', defaultSettings.admin_role);
   if (admin_role && message.member.roles.has(admin_role.id)) permlvl = 3;
   if (message.author.id === config.ownerid) permlvl = 4;
   return permlvl;
@@ -29,9 +50,7 @@ fs.readdir('./commands/', (err, files) => {
   log(`Loading a total of ${files.length} commands.`);
   files.forEach(f => {
     const props = require(`./commands/${f}`);
-    if (props.help.name === '') {
-      return;
-    }
+    
     log(`Loading Command: ${props.help.name}. 👌`);
     client.commands.set(props.help.name, props);
     props.conf.aliases.forEach(alias => {
@@ -64,7 +83,7 @@ client.reload = command => {
 
 const autoResponder = {
   "spongebob": {
-            file: "https://cdn.discordapp.com/attachments/458751527407058954/473641693883924481/mock.png"
+            file: ""
           },
   "oof": {
             file: "https://cdn.discordapp.com/attachments/473899818847305738/473899836333359134/oof.png"
@@ -72,6 +91,9 @@ const autoResponder = {
   "devin": "daddy?",
   "spock": {
     file: "https://cdn.discordapp.com/attachments/275732552797519873/475936918027239425/Z.png"
+  },
+  "mock": {
+    file: "https://cdn.discordapp.com/attachments/458751527407058954/473641693883924481/mock.png"
   }
 };
 
@@ -110,13 +132,57 @@ exports.checkMembers = function (guild) {
 client.on("guildCreate", guild => {
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   // client.user.setActivity(`Serving ${client.guilds.size} servers`);
+  client.settings.set(guild.id, defaultSettings);
 });
 
 
-client.on("guildDelete", guild => {
-  console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  // client.user.setActivity(`Serving ${client.guilds.size} servers`);
-});
+// client.on("guildDelete", guild => {
+//   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+//   // client.user.setActivity(`Serving ${client.guilds.size} servers`);
+//   client.settings.delete(guild.id);
+// });
+
+// client.on('guildMemberRemove', member => {
+//
+//     if (!member.guild.channels.exists('name', defaultSettings.logs_channel)) return;
+//
+//     const logger = member.guild.channels.find('name', defaultSettings.logs_channel)
+//
+//     var memberLeft = new Discord.RichEmbed()
+//       .setColor('FF0000')
+//       .setAuthor(`Member left`,`${member.user.displayAvatarURL}`)
+//       .setDescription(`${member.user} ${member.user.tag}`)
+//       .setFooter(`ID: ${member.id}`)
+//       .setTimestamp()
+//       return logger.send(memberLeft);
+// });
+
+
+// client.on("guildMemberAdd", member => {
+//   //
+//   // if (!member.guild.channels.exists('name', defaultSettings.logs_channel)) return;
+//   //
+//   // const logger = member.guild.channels.find('name', defaultSettings.logs_channel)
+//   //
+//   // var memberJoined = new Discord.RichEmbed()
+//   // .setColor('00FF00')
+//   // .setAuthor(`Member joined`,`${member.user.displayAvatarURL}`)
+//   // .setDescription(`${member.user} ${member.user.tag}`)
+//   // .setFooter(`ID: ${member.id}`)
+//   // .setTimestamp()
+//   // return logger.send(memberJoined);
+//
+//   if(defaultSettings.welcome_enabled !== "true") return;
+
+  // let welcome_message = client.settings.get(member.guild.id, "welcome_message");
+  //
+  // welcome_message = welcome_message.replace("{{user}}", `${member.user}`)
+  //
+  // member.guild.channels
+  //   .find("name", client.settings.get(member.guild.id, "welcome_channel"))
+  //   .send(welcome_message)
+  //   .catch(console.error);
+// });
 
 function commander(str, message) {
 	return message.content.toLowerCase().startsWith(config.prefix + str);
@@ -141,6 +207,55 @@ exports.mock = function(string) {
     }
     return chars.join('');
 };
+
+
+
+client.on("ready", async () => {
+  client.guilds.forEach(guild => {
+    if(!client.settings.has(guild.id)) {
+       client.settings.set(guild.id, defaultSettings);
+    }
+  });
+});
+
+
+client.on("message", async (message) => {
+  if(!message.guild || message.author.bot) return;
+
+  const guildConf = client.settings.get(message.guild.id) || defaultSettings;
+
+  if(message.content.indexOf(guildConf.prefix) !== 0) return;
+
+  const args = message.content.split(/\s+/g);
+  const command = args.shift().slice(guildConf.prefix.length).toLowerCase();
+
+  // if(command === "setconf") {
+  //   // const adminRole = message.guild.roles.find("name", guildConf.adminRole);
+  //   // if(!adminRole) return message.reply("Administrator Role Not Found");
+  //
+  //   // if(!message.member.roles.has(adminRole.id))
+  //   if(!message.member.hasPermission("ADMINISTRATOR"))  return message.reply("You're not an admin, sorry!")
+  //
+  //   const [key, ...value] = args;
+  //   // Example:
+  //   // key: "prefix"
+  //   // value: ["+"]
+  //
+  //   if(!client.settings.has(message.guild.id, key))  return message.reply("This key is not in the configuration.");
+  //
+  //   client.settings.set(message.guild.id, value.join(" "), key);
+  //
+  //   message.channel.send(`Guild configuration item ${key} has been changed to:\n\`${value.join(" ")}\``);
+  // }
+
+  // if(command === "showconf") {
+  //   let configKeys = "";
+  //   Object.keys(guildConf).forEach(key => {
+  //     configKeys += `${key}  :  ${guildConf[key]}\n`;
+  //   });
+  //   message.channel.send(`The following are the server's current configuration: \`\`\`${configKeys}\`\`\``);
+  // }
+});
 
 
 client.on('message', async message => {
@@ -181,6 +296,8 @@ client.on('message', message => {
 });
 */
 
+
+// This will react the author's message with all (or as many as possible) guild emojis
 // client.on('message', message => {
 //   all_emoji = client.guilds.first().emojis;
 //   if (message.author.id === '25') {
@@ -195,37 +312,67 @@ client.on('message', message => {
 // ===================================================================
 
   if (message.content === 'prefix???')
-  message.channel.send(`Current bot prefix is ${config.prefix}`);
+  message.channel.send(`Current bot global prefix is ${config.prefix}`);
 
 // ===================================================================
 
 });
 
-
-client.on('messageDelete', async (message) => {
-  const logs = message.guild.channels.find('name', 'logs');
-  if (message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
-    message.guild.createChannel('logs', 'text');
-  }
-  if (!message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
-    console.log('The logs channel does not exist and tried to create the channel but I am lacking permissions')
-  }
-  const entry = await message.guild.fetchAuditLogs({type: 'MESSAGE_DELETE'}).then(audit => audit.entries.first())
-  let user = ""
-    if (entry.extra.channel.id === message.channel.id
-      && (entry.target.id === message.author.id)
-      && (entry.createdTimestamp > (Date.now() - 5000))
-      && (entry.extra.count >= 1)) {
-    user = entry.executor.username
-  }
-  logs.send(`A message was deleted in ${message.channel.name} by ${user}`);
-});
-
-
-
-
-
-// This will react the author's message with all (or as many as possible) guild emojis
+// client.on('guildBanAdd', (message, guild, user) => {
+//
+//     if (!message.guild.channels.exists('name', defaultSettings.logs_channel)) return;
+//     const logs = message.guild.channels.find('name', defaultSettings.logs_channel);
+//     logs.send(`**User banned -> \`${user.tag}\`**`, guild)
+// })
+//
+// client.on('guildBanRemove', (message, guild, user) => {
+//
+//     if (!message.guild.channels.exists('name', defaultSettings.logs_channel)) return;
+//     const logs = message.guild.channels.find('name', defaultSettings.logs_channel);
+//     logs.send(`**User unbanned -> \`${user.tag}\`**`, guild)
+// })
+//
+// client.on('roleCreate', (message, role) => {
+//     if (!message.guild.channels.exists('name', defaultSettings.logs_channel)) return;
+//     const logs = message.guild.channels.find('name', defaultSettings.logs_channel);
+//     logs.send("**New role created**", role.guild)
+// })
+//
+// client.on('roleDelete', (message, role) => {
+//     logs.send("**Role deleted -> `" + role.name + "`**", role.guild)
+// })
+//
+//
+// client.on('roleUpdate', (message, old, nw) => {
+//
+//   if (!message.guild.channels.exists('name', defaultSettings.logs_channel)) return;
+//   const logs = message.guild.channels.find('name', defaultSettings.logs_channel);
+//     let txt
+//     if (old.name !== nw.name) {
+//         txt = `**${old.name} | Role name updated to -> \`${nw.name}\`**`
+//     } else return
+//     logs.send(txt, nw.guild)
+// })
+//
+// client.on('guildMemberUpdate', (message, old, nw) => {
+//     if (!message.guild.channels.exists('name', defaultSettings.logs_channel)) return;
+//     const logs = message.guild.channels.find('name', defaultSettings.logs_channel);
+//     let txt
+//     if (old.roles.size !== nw.roles.size) {
+//         if (old.roles.size > nw.roles.size) {
+//
+//             let dif = old.roles.filter(r => !nw.roles.has(r.id)).first()
+//             txt = `**${nw.user.tag} | Role taken -> \`${dif.name}\`**`
+//         } else if (old.roles.size < nw.roles.size) {
+//
+//             let dif = nw.roles.filter(r => !old.roles.has(r.id)).first()
+//             txt = `**${nw.user.tag} | Role given -> \`${dif.name}\`**`
+//         }
+//     } else if (old.nickname !== nw.nickname) {
+//         txt = `**${nw.user.tag} | Changed their nickname to -> \`${nw.nickname}\`**`
+//     } else return
+//     logs.send(txt, nw.guild)
+// })
 
 
 exports.statistics = function () {
@@ -243,5 +390,5 @@ exports.statistics = function () {
 	console.log(`current.uptime ${hours}h, ${minutes}m & ${seconds.toFixed()}s`)
 }
 
-// client.login(token);
-client.login(process.env.BOT_TOKEN);
+client.login(config.token);
+// client.login(process.env.BOT_TOKEN);

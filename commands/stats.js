@@ -17,7 +17,7 @@ exports.run = async function(client, message, args) {
 exports.conf = {
   enabled: true,
   guildOnly: false,
-  aliases: ['h', 'halp'],
+  aliases: ['statistics', 'botinfo', 'bot'],
   permLevel: 0
 };
 

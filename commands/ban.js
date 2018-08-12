@@ -1,22 +1,35 @@
+const Discord = require("discord.js");
+const errors = require("../utils/errors.js");
+const data = require('../bot.js')
+
 exports.run = async function(client, message, args) {
+  
+      if(!message.member.hasPermission("BAN_MEMBERS")) return errors.noPerms(message, "BAN_MEMBERS");
+      if(args[0] == "help"){
+        message.reply(`Usage: ${data.defaultSettings.prefix}ban <user> <reason>`);
+        return;
+      }
+      let bUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+      if(!bUser) return errors.cantfindUser(message.channel);
+      if(bUser.id === client.user.id) return errors.botuser(message);
+      let bReason = args.join(" ").substring(19);
+      if(!bReason) return errors.noReason(message.channel);
+      if(bUser.hasPermission("MANAGE_MESSAGES")) return errors.equalPerms(message, bUser, "MANAGE_MESSAGES");
 
+      let banEmbed = new Discord.RichEmbed()
+      .setDescription("~Ban~")
+      .setColor("#bc0000")
+      .addField("Banned User", `${bUser} with ID ${bUser.id}`)
+      .addField("Banned By", `<@${message.author.id}> with ID ${message.author.id}`)
+      .addField("Banned In", message.channel)
+      .addField("Time", message.createdAt)
+      .addField("Reason", bReason);
 
-  if(!message.member.roles.some(r=>["Manager"].includes(r.name)) )
-    return message.reply("Sorry, you don't have permissions to use this!");
+      let incidentchannel = message.guild.channels.find(`name`, data.defaultSettings.logs_channel);
+      // if(!incidentchannel) return message.channel.send("Can't find incidents channel.");
 
-  let member = message.mentions.members.first();
-  if(!member)
-    return message.reply("Please mention a valid member of this server");
-  if(!member.bannable)
-    return message.reply("I cannot ban this user! Do they have a higher role? Do I have ban permissions?");
-
-  let reason = args.slice(1).join(' ');
-  if(!reason) reason = "No reason provided";
-
-  await member.ban(reason)
-    .catch(error => message.reply(`Sorry ${message.author} I couldn't ban because of : ${error}`));
-  message.reply(`${member.user.tag} has been banned by ${message.author.tag} because: ${reason}`);
-
+      message.guild.member(bUser).ban(bReason);
+      incidentchannel.send(banEmbed);
 
 };
 

@@ -1,23 +1,52 @@
+const Discord = require("discord.js");
+const errors = require("../utils/errors.js");
+const data = require('../bot.js')
+
+
 exports.run = async function(client, message, args) {
 
-  if(!message.member.roles.some(r=>["Manager", "Lead Admin", "Admin", "Moderator"].includes(r.name)) )
-    return message.reply("Sorry, you don't have permissions to use this!");
+if(!message.member.hasPermission("KICK_MEMBERS")) return errors.noPerms(message, "KICK_MEMBERS");
+    if(args[0] == "help"){
+      message.reply(`Usage: ${data.defaultSettings.prefix}kick <user> <reason>`);
+      return;
+    }
+    let kUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+    if(!kUser) return errors.cantfindUser(message.channel);
+    let kReason = args.join(" ").slice(19);
+    if(kUser.hasPermission("MANAGE_MESSAGES")) return errors.equalPerms(message, kUser, "MANAGE_MESSAGES");
 
-  // You can either mention a member, or use his ID
-  let member = message.mentions.members.first() || message.guild.members.get(args[0]);
-  if(!member)
-    return message.reply("Please mention a valid member of this server");
-  if(!member.kickable)
-    return message.reply("I cannot kick this user! Do they have a higher role? Do I have kick permissions?");
+    let kickEmbed = new Discord.RichEmbed()
+    .setDescription("~Kick~")
+    .setColor("#e56b00")
+    .addField("Kicked User", `${kUser} with ID ${kUser.id}`)
+    .addField("Kicked By", `<@${message.author.id}> with ID ${message.author.id}`)
+    .addField("Kicked In", message.channel)
+    .addField("Tiime", message.createdAt)
+    .addField("Reason", kReason);
 
-  // slice(1) removes the first part, which here should be the user mention or ID
-  // join(' ') takes all the various parts to make it a single string.
-  let reason = args.slice(1).join(' ');
-  if(!reason) reason = "No reason provided";
+    let kickChannel = message.guild.channels.find(`name`, data.defaultSettings.logs_channel);
+    // if(!kickChannel) return message.channel.send("Can't find incidents channel.");
 
-  await member.kick(reason)
-    .catch(error => message.reply(`Sorry ${message.author} I couldn't kick because of : ${error}`));
-  message.reply(`${member.user.tag} has been kicked by ${message.author.tag} because: ${reason}`);
+    message.guild.member(kUser).kick(kReason);
+    kickChannel.send(kickEmbed);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 };
 

@@ -1,13 +1,10 @@
 exports.run = async function(client, message, args) {
-  if(message.member.hasPermission("ADMINISTRATOR")) {
-    let args = message.content.split(' ').slice(1);
+
     var result = message.content.split(" ").slice(1, 2)[0];
         if (!result) {
           result = 'online';
         }
     client.user.setStatus(result);
-}
-
 
 };
 

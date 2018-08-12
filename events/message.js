@@ -1,9 +1,11 @@
 const settings = require('../config.json');
+const data = require('../bot.js');
+
 module.exports = message => {
   const client = message.client;
   if (message.author.bot) return;
-  if (!message.content.startsWith(settings.prefix)) return;
-  const command = message.content.split(' ')[0].slice(settings.prefix.length);
+  if (!message.content.startsWith(data.defaultSettings.prefix)) return;
+  const command = message.content.split(' ')[0].slice(data.defaultSettings.prefix.length);
   const params = message.content.split(' ').slice(1);
   const perms = client.elevation(message);
   let cmd;

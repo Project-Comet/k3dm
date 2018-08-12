@@ -1,2 +1,5 @@
 /node_modules
 start_bot.bat
+config.json
+basecommandfile
+/data
