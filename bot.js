@@ -390,5 +390,4 @@ exports.statistics = function () {
 	console.log(`current.uptime ${hours}h, ${minutes}m & ${seconds.toFixed()}s`)
 }
 
-client.login(config.token);
-// client.login(process.env.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
